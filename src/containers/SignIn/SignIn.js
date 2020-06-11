@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import styles from './form.module.css'
-import Logo from '../components/UI/Logo/logo'
-import Input from '../components/UI/Input/Input'
-import Button from '../components/UI/Button/Button'
+import styles from './SignIn.module.css'
+import Input from '../../components/UI/Input/Input'
+import Button from '../../components/UI/Button/Button'
 import axios from 'axios'
 
 class Login extends Component {
@@ -138,7 +137,6 @@ class Login extends Component {
 
         return (
             <div className={styles.Login} >
-                <Logo></Logo>
                 <div style={{ textAlign: "center" }}>
                     <p>Login: test@mail.com</p>
                     <p>Password: Test.123</p>

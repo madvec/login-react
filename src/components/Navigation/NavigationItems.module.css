@@ -1,0 +1,8 @@
+.Navigation {
+  display: flex;
+  max-width: 350px;
+  padding: 0 15px;
+  margin: 0 auto;
+  list-style: none;
+  width: 100%;
+}

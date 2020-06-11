@@ -1,7 +1,9 @@
-.App {
+.App {  
   align-self: center;
   background-color: #f5f5f5;
+  flex-direction: column;
   display: flex;
-  height: 100vh;  
+  height: 100vh;
   position: relative;
+  padding: 15px;  
 }

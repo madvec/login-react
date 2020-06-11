@@ -1,0 +1,14 @@
+.NavigationItem {
+    text-align: center;
+    width: 100px;
+}
+
+.NavigationItem a {
+    color:#bcbcbc;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.NavigationItem .active {
+    color: #333333;
+}

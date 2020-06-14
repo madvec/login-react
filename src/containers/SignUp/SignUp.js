@@ -156,11 +156,7 @@ class Login extends Component {
       message = <p>Oops!!! Something went wrong. Try again please</p>;
 
     return (
-      <div className={styles.Login}>
-        <div style={{ textAlign: "center" }}>
-          <p>Login: test@mail.com</p>
-          <p>Password: Test.123</p>
-        </div>
+      <div className={styles.Login}>        
         <form onSubmit={this.onInputHandler}>
           {form}
           <Button>Login</Button>

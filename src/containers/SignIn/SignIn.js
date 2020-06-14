@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import styles from './SignIn.module.css'
 import Input from '../../components/UI/Input/Input'
 import Button from '../../components/UI/Button/Button'
-import axios from 'axios'
+import Loader from '../../components/UI/Loader/Loader'
+import { connect } from 'react-redux'
+import * as actions from '../../store/actions/actions'
 
 class Login extends Component {
 
@@ -17,6 +19,7 @@ class Login extends Component {
                 value: '',
                 validation: {
                     isRequired: true,
+                    isEmail: true
                 },
                 valid: false,
                 touched: false
@@ -35,33 +38,13 @@ class Login extends Component {
                 touched: false
             }
         },
-        error: false,
-        idToken: null
+        idToken: null,
+        formisInvalid: false
     }
 
     onInputHandler = (event) => {
         event.preventDefault();
-        this.onAuth(this.state.loginInputs.email.value, this.state.loginInputs.password.value)
-    }
-
-    onAuth = (email, password) => {
-        const authData = {
-            email: email,
-            password: password,
-            returnSecureToken: true
-        }
-
-        let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAIraa0C0u-L1lnpfoYjo8Sf9rBt4o8P1A'
-
-        axios.post(url, authData)
-            .then(response => {
-                console.log(response.data)
-                this.setState({ error: false, idToken: response.data.idToken })
-            })
-            .catch(error => {
-                console.log(error)
-                this.setState({ idToken: null, error: true })
-            })
+        this.props.onAuth(this.state.loginInputs.email.value, this.state.loginInputs.password.value)
     }
 
     inputChangedHandler = (event, inputId) => {
@@ -78,7 +61,13 @@ class Login extends Component {
         updatedInputElement.touched = true;
         updatedLoginForm[inputId] = updatedInputElement
 
-        this.setState({ loginInputs: updatedLoginForm })
+        let formisValid = true
+
+        for (let inputId in updatedLoginForm) {
+            formisValid = updatedLoginForm[inputId].valid && formisValid
+        }
+
+        this.setState({ loginInputs: updatedLoginForm, formisInvalid: formisValid })
     }
 
     checkValid = (value, rules) => {
@@ -130,10 +119,14 @@ class Login extends Component {
 
         let message = null
 
-        if (this.state.idToken)
+        if (this.props.idToken && !this.props.error)
             message = <p>Congratulations, you are logged in</p>
-        else if (!this.state.idToken && this.state.error)
+        else if (!this.props.idToken && this.props.error)
             message = <p>Oops!!! Something went wrong. Try again please</p>
+
+        if (this.props.loading) {
+            return <Loader />
+        }
 
         return (
             <div className={styles.Login} >
@@ -143,7 +136,7 @@ class Login extends Component {
                 </div>
                 <form onSubmit={this.onInputHandler}>
                     {form}
-                    <Button>Login</Button>
+                    <Button disabled={!this.state.formisInvalid}>Login</Button>
                 </form>
                 {message}
             </div>
@@ -151,4 +144,18 @@ class Login extends Component {
     }
 }
 
-export default Login
+const mapStateToProps = state => {    
+    return {
+        idToken: state.idToken,
+        loading: state.loading,
+        error: state.error
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onAuth: (email, password) => dispatch(actions.sign_in(email, password))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)
